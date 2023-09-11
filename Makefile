@@ -76,10 +76,14 @@ push: ensure-clean
 	echo "Pushing to $$BRANCH_NAME branch..."; \
 	git push origin $$BRANCH_NAME; \
 	if [[ $$BRANCH_NAME == release-* ]] || [[ $$BRANCH_NAME == hotfix-* ]]; then \
-		TAG_NAME=$(shell git describe --tags --abbrev=0); \
-		echo "Pushing $$TAG_NAME tag..."; \
-		git push origin $$TAG_NAME --force-with-lease; \
-	fi; \
+		TAG_NAME=$(shell git describe --tags --abbrev=0 2>/dev/null); \
+		if [ -n "$$TAG_NAME" ]; then \
+			echo "Pushing $$TAG_NAME tag..."; \
+			git push origin $$TAG_NAME --force-with-lease; \
+		else \
+			echo "No tags found to push."; \
+		fi; \
+	fi;
 	echo "Done!";
 
 
