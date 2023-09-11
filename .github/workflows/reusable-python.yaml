@@ -1,0 +1,86 @@
+name: Reusable Workflow
+on:
+  workflow_call:
+    inputs:
+      run-pre-commit:
+        type: boolean
+        description: 'Whether to run pre-commit or not'
+        required: false
+        default: 'false'
+      run-py-test:
+        type: boolean
+        description: 'Whether to run pytest or not'
+        required: false
+        default: 'false'
+
+      run-pypi-publish:
+        type: boolean
+        description: 'Whether to publish to PyPI or not'
+        required: false
+        default: 'false'
+
+
+
+jobs:
+  reusable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Setup cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.cache/pre-commit
+            .venv
+
+          key: reusable-${{ hashFiles('**/pyproject.toml') }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('**/.pre-commit-config.yaml') }}
+          restore-keys: |
+            reusable-${{ hashFiles('**/pyproject.toml') }}-${{ hashFiles('**/poetry.lock') }}-
+            reusable-${{ hashFiles('**/pyproject.toml') }}-${{ hashFiles('**/poetry.lock') }}
+            reusable-${{ hashFiles('**/pyproject.toml') }}-
+            reusable-${{ hashFiles('**/pyproject.toml') }}
+            reusable-
+
+      - name: Install Poetry and dependencies and setup PyPI token
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry config virtualenvs.in-project true
+          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          poetry install
+
+      - name: activate virtualenv
+        run: |
+          source .venv/bin/activate
+
+      - name: Run pre-commit
+        if: ${{ github.event.inputs.run-pre-commit == 'true' }}
+        run: |
+          poetry run pre-commit run --all-files
+        shell: bash
+
+      - name: Run pytest
+        if: ${{ github.event.inputs.run-py-test == 'true' }}
+        run: |
+          poetry run python -m pytest
+        shell: bash
+
+      #  publishing
+      - name: Publish to PyPI
+        if: ${{ github.event.inputs.run-pypi-publish == 'true' }}
+        run: |
+          poetry build
+          poetry publish
+        shell: bash
