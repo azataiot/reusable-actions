@@ -49,7 +49,7 @@ jobs:
             reusable-${{ hashFiles('**/pyproject.toml') }}
             reusable-
 
-      - name: Install Poetry and dependencies and setup PyPI token
+      - name: Install Poetry and dependencies
         run: |
           python -m pip install --upgrade pip
           pip install poetry
