@@ -1,0 +1,58 @@
+name: Github Release
+
+on:
+  pull_request:
+    branches: [ 'main' ]
+    types:
+      - closed
+  workflow_dispatch:
+
+jobs:
+  release:
+    if: github.repository_owner == 'azataiot'
+    env:
+      GH_TOKEN: ${{ github.token }}
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version and release type from pyproject.toml
+        run: |
+          echo "VERSION=$(grep '^\[tool.poetry\]' -A 5 pyproject.toml | grep '^version =' | awk -F\" '{print $2}')" >> $GITHUB_ENV
+          RELEASE_TYPE=$(echo $VERSION | grep -oP '(\.|-)[a-z]+' | awk 'NR==1' | sed 's/\.//')
+          if [[ -z "$RELEASE_TYPE" ]]; then
+            RELEASE_TYPE="final"
+          fi
+          echo "RELEASE_TYPE=$RELEASE_TYPE" >> $GITHUB_ENV
+
+      - name: Check if release exists
+        id: check_release
+        run: |
+          if gh release view "$VERSION" > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_ENV
+          else
+            echo "exists=false" >> $GITHUB_ENV
+          fi
+        continue-on-error: true
+
+      - name: Create a new issue if release exists
+        if: env.exists == 'true'
+        run: |
+          gh issue create --title "Release $VERSION already exists" --body "The release for version $VERSION already exists. Please review and take appropriate action."
+
+      - name: Fail if release exists
+        if: env.exists == 'true'
+        run: |
+          echo "Error: Release $VERSION already exists!"
+          exit 1
+
+      - name: gh release create
+        if: env.exists == 'false' && (env.RELEASE_TYPE == 'final' || env.RELEASE_TYPE == 'post')
+        run: |
+          gh release create --generate-notes --title "Release $VERSION" "$VERSION"
