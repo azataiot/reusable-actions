@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   linting:
-    uses: azataiot/reusable-actions/.github/workflows/reusable-python.yaml@dev
+    uses: azataiot/reusable-actions/.github/workflows/reusable-python.yaml@main
     with:
       run-pre-commit: true
       run-py-test: true
