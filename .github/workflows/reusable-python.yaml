@@ -65,20 +65,20 @@ jobs:
           source .venv/bin/activate
 
       - name: Run pre-commit
-        if: ${{ inputs.run-pre-commit == 'true' }}
+        if: ${{ inputs.run-pre-commit == true }}
         run: |
           poetry run pre-commit run --all-files
         shell: bash
 
       - name: Run pytest
-        if: ${{ inputs.run-py-test == 'true' }}
+        if: ${{ inputs.run-py-test == true }}
         run: |
           poetry run python -m pytest
         shell: bash
 
       #  publishing
       - name: Publish to PyPI
-        if: ${{ inputs.run-pypi-publish == 'true' }}
+        if: ${{ inputs.run-pypi-publish == true }}
         run: |
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
           poetry build
