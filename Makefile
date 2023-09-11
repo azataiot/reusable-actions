@@ -144,7 +144,65 @@ version:
 		echo "No version type provided. Version remains unchanged."; \
 	fi
 
-
+## Checkout a new branch
+branch:
+	@bash -c ' \
+	echo "Choose a branch type:"; \
+	PS3="Select an option: "; \
+	options=("main" "dev" "feature" "release" "hotfix" "temp" "quit"); \
+	select opt in "$${options[@]}"; do \
+		case $$opt in \
+			main) \
+				git checkout main; \
+				read -p "Do you want to run git pull? [Y/n]: " pull_choice; \
+				[ -z "$$pull_choice" ] && pull_choice="Y"; \
+				if [ $$pull_choice = "Y" ] || [ $$pull_choice = "y" ]; then \
+					git pull origin main; \
+				fi; \
+				break; \
+				;; \
+			dev) \
+				git rev-parse --verify dev >/dev/null 2>&1 || git checkout -b dev; \
+				git checkout dev; \
+				read -p "Do you want to run git pull? [Y/n]: " pull_choice; \
+				[ -z "$$pull_choice" ] && pull_choice="Y"; \
+				if [ $$pull_choice = "Y" ] || [ $$pull_choice = "y" ]; then \
+					git pull origin dev; \
+				fi; \
+				break; \
+				;; \
+			feature) \
+				read -p "Enter the feature name: " feature_name; \
+				git checkout -b feature/$$feature_name; \
+				break; \
+				;; \
+			release) \
+				$(MAKE) version; \
+				version=$$(poetry version -s); \
+				git checkout -b release/$$version; \
+				break; \
+				;; \
+			hotfix) \
+				$(MAKE) version; \
+				version=$$(poetry version -s); \
+				git checkout -b hotfix/$$version; \
+				break; \
+				;; \
+			temp) \
+				random_string=$$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13); \
+				git checkout -b temp/$$random_string; \
+				break; \
+				;; \
+			quit) \
+				echo "Exiting..."; \
+				break; \
+				;; \
+			*) \
+				echo "Invalid choice"; \
+				;; \
+		esac; \
+	done; \
+	'
 
 
 # -- Code Quality --
