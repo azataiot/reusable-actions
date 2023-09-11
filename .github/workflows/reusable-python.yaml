@@ -72,14 +72,14 @@ jobs:
         shell: bash
 
       - name: Run pytest
-        if: ${{ github.event.inputs.run-py-test == 'true' }}
+        if: ${{ inputs.run-py-test == 'true' }}
         run: |
           poetry run python -m pytest
         shell: bash
 
       #  publishing
       - name: Publish to PyPI
-        if: ${{ github.event.inputs.run-pypi-publish == 'true' }}
+        if: ${{ inputs.run-pypi-publish == 'true' }}
         run: |
           poetry build
           poetry publish
