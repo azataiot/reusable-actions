@@ -11,3 +11,6 @@ jobs:
   github-release:
     if: github.event.pull_request.merged == true && github.repository_owner == 'azataiot'
     uses: azataiot/reusable-actions/.github/workflows/reusable-release.yml@dev
+    with:
+      create-issue: true
+      fail-if-release-exists: true
