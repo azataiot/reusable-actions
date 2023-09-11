@@ -32,11 +32,7 @@ jobs:
       - name: Get version and release type from pyproject.toml
         run: |
           echo "VERSION=$(grep '^\[tool.poetry\]' -A 5 pyproject.toml | grep '^version =' | awk -F\" '{print $2}')" >> $GITHUB_ENV
-          RELEASE_TYPE=$(echo $VERSION | grep -oP '(\.|-)[a-z]+' | awk 'NR==1' | sed 's/\.//')
-          if [[ -z "$RELEASE_TYPE" ]]; then
-            RELEASE_TYPE="final"
-          fi
-          echo "RELEASE_TYPE=$RELEASE_TYPE" >> $GITHUB_ENV
+
 
       - name: Check if release exists
         id: check_release
@@ -60,6 +56,6 @@ jobs:
           exit 1
 
       - name: gh release create
-        if: env.exists == 'false' && (env.RELEASE_TYPE == 'final' || env.RELEASE_TYPE == 'post')
+        if: env.exists == 'false'
         run: |
           gh release create --generate-notes --title "Release $VERSION" "$VERSION"
