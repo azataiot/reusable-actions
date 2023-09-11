@@ -3,20 +3,17 @@ requires = [ "poetry-core",]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "python-project-template-poetry"
-version = "0.1.0.dev8"
+name = "reuseable-actions"
+version = "0.0.1"
 description = "A project template to use for new Python Github repositories with best practices."
 authors = [ "Azat <8280770+azataiot@users.noreply.github.com>",]
 readme = "README.md"
 license = "MIT"
-homepage = "https://github.com/azataiot/python-project-template"
-exclude = [ "tests",]
-[[tool.poetry.packages]]
-include = "src"
-from = "."
+homepage = "https://github.com/azataiot/reuseable-actions"
+
 
 [tool.bandit]
-exclude_dirs = [ "tests", "path/to/file",]
+exclude_dirs = [ "tests"]
 tests = [ "B201", "B301",]
 skips = [ "B101", "B601",]
 
