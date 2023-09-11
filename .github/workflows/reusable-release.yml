@@ -1,15 +1,22 @@
-name: Github Release
-
+name: Reusable Python Workflow
 on:
-  pull_request:
-    branches: [ 'main' ]
-    types:
-      - closed
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      create-issue:
+        type: boolean
+        description: 'Whether to create an issue or not if release exists'
+        required: false
+        default: true
+      fail-if-release-exists:
+        type: boolean
+        description: 'Whether to fail if release exists or not'
+        required: false
+        default: true
+
+
 
 jobs:
   release:
-    if: github.repository_owner == 'azataiot'
     env:
       GH_TOKEN: ${{ github.token }}
     permissions:
@@ -42,12 +49,12 @@ jobs:
         continue-on-error: true
 
       - name: Create a new issue if release exists
-        if: env.exists == 'true'
+        if: ${{ inputs.create-issue }}  && env.exists == 'true'
         run: |
           gh issue create --title "Release $VERSION already exists" --body "The release for version $VERSION already exists. Please review and take appropriate action."
 
       - name: Fail if release exists
-        if: env.exists == 'true'
+        if: ${{ inputs.fail-if-release-exists }} && env.exists == 'true'
         run: |
           echo "Error: Release $VERSION already exists!"
           exit 1

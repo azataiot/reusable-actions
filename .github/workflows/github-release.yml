@@ -1,0 +1,13 @@
+name: Github Release
+
+on:
+  pull_request:
+    branches: [ 'main' ]
+    types:
+      - closed
+  workflow_dispatch:
+
+jobs:
+  github-release:
+    if: github.event.pull_request.merged == true && github.repository_owner == 'azataiot'
+    uses: azataiot/reusable-actions/.github/workflows/reusable-release.yml@dev

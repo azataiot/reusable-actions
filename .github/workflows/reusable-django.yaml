@@ -1,4 +1,4 @@
-name: Reusable Workflow
+name: Reusable Django Workflow
 on:
   workflow_call:
     inputs:
@@ -6,52 +6,52 @@ on:
         type: boolean
         description: 'Whether to run pre-commit or not'
         required: false
-        default: 'false'
+        default: false
       run-py-test:
         type: boolean
         description: 'Whether to run pytest or not'
         required: false
-        default: 'false'
+        default: false
       run-dj-check:
         type: boolean
         description: 'Whether to run django management check or not'
         required: false
-        default: 'false'
+        default: false
       run-dj-test:
         type: boolean
         description: 'Whether to run django management tests or not'
         required: false
-        default: 'false'
+        default: false
       run-dj-makemigrations:
         type: boolean
         description: 'Whether to run django management makemigrations or not'
         required: false
-        default: 'false'
+        default: false
       run-dj-migrate:
         type: boolean
         description: 'Whether to run django management migrate or not'
         required: false
-        default: 'false'
+        default: false
       run-dj-collectstatic:
         type: boolean
         description: 'Whether to run django management collectstatic or not'
         required: false
-        default: 'false'
+        default: false
       run-dj-compilemessages:
         type: boolean
         description: 'Whether to run django management compilemessages or not'
         required: false
-        default: 'false'
+        default: false
       run-dj-makemessages:
         type: boolean
         description: 'Whether to run django management makemessages or not'
         required: false
-        default: 'false'
+        default: false
       run-pypi-publish:
         type: boolean
         description: 'Whether to publish to PyPI or not'
         required: false
-        default: 'false'
+        default: false
 
 
 
@@ -100,63 +100,63 @@ jobs:
           source .venv/bin/activate
 
       - name: Run pre-commit
-        if: ${{ github.event.inputs.run-pre-commit == 'true' }}
+        if: ${{ inputs.run-pre-commit == 'true' }}
         run: |
           poetry run pre-commit run --all-files
         shell: bash
 
       - name: Run pytest
-        if: ${{ github.event.inputs.run-py-test == 'true' }}
+        if: ${{ inputs.run-py-test == 'true' }}
         run: |
           poetry run python -m pytest
         shell: bash
 
       #  django
       - name: Run django management check
-        if: ${{ github.event.inputs.run-dj-check == 'true' }}
+        if: ${{ inputs.run-dj-check == 'true' }}
         run: |
           poetry run python manage.py check
         shell: bash
 
       - name: Run django management tests
-        if: ${{ github.event.inputs.run-dj-test == 'true' }}
+        if: ${{ inputs.run-dj-test == 'true' }}
         run: |
           poetry run python manage.py test
         shell: bash
 
       - name: Run django management makemigrations
-        if: ${{ github.event.inputs.run-dj-makemigrations == 'true' }}
+        if: ${{ inputs.run-dj-makemigrations == 'true' }}
         run: |
           poetry run python manage.py makemigrations
         shell: bash
 
       - name: Run django management migrate
-        if: ${{ github.event.inputs.run-dj-migrate == 'true' }}
+        if: ${{ inputs.run-dj-migrate == 'true' }}
         run: |
           poetry run python manage.py migrate
         shell: bash
 
       - name: Run django management collectstatic
-        if: ${{ github.event.inputs.run-dj-collectstatic == 'true' }}
+        if: ${{ inputs.run-dj-collectstatic == 'true' }}
         run: |
           poetry run python manage.py collectstatic
         shell: bash
 
       - name: Run django management compilemessages
-        if: ${{ github.event.inputs.run-dj-compilemessages == 'true' }}
+        if: ${{ inputs.run-dj-compilemessages == 'true' }}
         run: |
           poetry run python manage.py compilemessages
         shell: bash
 
       - name: Run django management makemessages
-        if: ${{ github.event.inputs.run-dj-makemessages == 'true' }}
+        if: ${{ inputs.run-dj-makemessages == 'true' }}
         run: |
           poetry run python manage.py makemessages
         shell: bash
 
       #  publishing
       - name: Publish to PyPI
-        if: ${{ github.event.inputs.run-pypi-publish == 'true' }}
+        if: ${{ inputs.run-pypi-publish == 'true' }}
         run: |
           poetry build
           poetry publish
