@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "reusable-actions"
-version = "0.0.2"
+version = "0.0.2.post1"
 description = "A project template to use for new Python Github repositories with best practices."
 authors = [ "Azat <8280770+azataiot@users.noreply.github.com>",]
 readme = "README.md"
