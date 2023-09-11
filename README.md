@@ -3,7 +3,7 @@
 [![Code Quality](https://github.com/azataiot/python-project-template/actions/workflows/code-quality.yml/badge.svg)](https://github.com/azataiot/python-project-template/actions/workflows/code-quality.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
-[![latest release](https://img.shields.io/github/v/release/azataiot/python-project-template)](https://github.com/azataiot/python-project-template/releases)
+[![latest release](https://img.shields.io/github/v/release/azataiot/reuseable-actions)](https://github.com/azataiot/reuseable-actions/releases)
 
 **Introduction**: Some personal collection of reusable actions to reuse and call in other actions.
 
