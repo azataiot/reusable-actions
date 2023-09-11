@@ -111,6 +111,7 @@ jobs:
           poetry run python -m pytest
         shell: bash
 
+      #  django
       - name: Run django management check
         if: ${{ github.event.inputs.run-dj-check == 'true' }}
         run: |
@@ -153,6 +154,7 @@ jobs:
           poetry run python manage.py makemessages
         shell: bash
 
+      #  publishing
       - name: Publish to PyPI
         if: ${{ github.event.inputs.run-pypi-publish == 'true' }}
         run: |
