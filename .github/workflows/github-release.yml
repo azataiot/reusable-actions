@@ -9,8 +9,12 @@ on:
 
 jobs:
   github-release:
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
     if: github.event.pull_request.merged == true && github.repository_owner == 'azataiot'
-    uses: azataiot/reusable-actions/.github/workflows/reusable-release.yml@dev
+    uses: azataiot/reusable-actions/.github/workflows/reusable-release.yaml@dev
     with:
       create-issue: true
       fail-if-release-exists: true
