@@ -12,6 +12,11 @@ on:
         description: 'Whether to fail if release exists or not'
         required: false
         default: true
+      debug:
+        type: boolean
+        description: 'Whether to print debug messages or not'
+        required: false
+        default: true
 
 jobs:
   release:
@@ -24,12 +29,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Debug - Print create-issue input
+        run: echo "create-issue=${{ inputs.create-issue }}"
+
+      - name: Debug - Print fail-if-release-exists input
+        run: echo "fail-if-release-exists=${{ inputs.fail-if-release-exists }}"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Get version and release type from pyproject.toml
         run: |
           echo "VERSION=$(grep '^\[tool.poetry\]' -A 5 pyproject.toml | grep '^version =' | awk -F\" '{print $2}')" >> $GITHUB_ENV
+
+      - name: Debug - Print VERSION
+        run: echo "VERSION=$VERSION"
 
       - name: Check if release exists
         id: check_release
@@ -40,6 +55,9 @@ jobs:
             echo "exists=false" >> $GITHUB_ENV
           fi
         continue-on-error: true
+
+      - name: Debug - Print exists value
+        run: echo "exists=$exists"
 
       - name: Create a new issue if release exists
         if: ${{ inputs.create-issue }} && ${{ env.exists == 'true' }}
