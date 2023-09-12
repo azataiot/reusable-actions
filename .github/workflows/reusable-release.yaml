@@ -45,12 +45,12 @@ jobs:
         continue-on-error: true
 
       - name: Create a new issue if release exists
-        if: ${{ inputs.create-issue }} == true  && env.exists == 'true'
+        if: ${{ inputs.create-issue == true }} == true  && env.exists == 'true'
         run: |
           gh issue create --title "Release $VERSION already exists" --body "The release for version $VERSION already exists. Please review and take appropriate action."
 
       - name: Fail if release exists
-        if: ${{ inputs.fail-if-release-exists }} == true && env.exists == 'true'
+        if: ${{ inputs.fail-if-release-exists == true  }} == true && env.exists == 'true'
         run: |
           echo "Error: Release $VERSION already exists!"
           exit 1
