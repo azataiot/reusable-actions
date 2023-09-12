@@ -9,7 +9,57 @@
 
 ## Usage
 
+```yml
+name: Code Quality
 
+on:
+  pull_request:
+    branches: [ 'main', 'dev' ]
+    types:
+      - opened
+      - synchronize
+  push:
+    branches: [ 'dev' ]
+  workflow_dispatch:
+    if: github.actor != 'dependabot[bot]'
+
+permissions:
+  contents: read
+
+jobs:
+  linting:
+    uses: azataiot/reusable-actions/.github/workflows/reusable-python.yaml@dev
+    with:
+      run-pre-commit: true
+      run-py-test: true
+      run-pypi-publish: false
+
+```
+
+```bash
+name: Github Release
+
+on:
+  pull_request:
+    branches: [ 'main' ]
+    types:
+      - closed
+  workflow_dispatch:
+
+jobs:
+  github-release:
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+    if: github.event.pull_request.merged == true && github.repository_owner == 'azataiot'
+    uses: azataiot/reusable-actions/.github/workflows/reusable-release.yaml@dev
+    with:
+      debug: true
+      create-issue: true
+      fail-if-release-exists: true
+
+```
 
 
 
