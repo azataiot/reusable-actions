@@ -36,7 +36,7 @@ jobs:
 
 ```
 
-```bash
+```yml
 name: Github Release
 
 on:
