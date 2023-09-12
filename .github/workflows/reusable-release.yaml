@@ -37,7 +37,7 @@ jobs:
       - name: Get version and release type from pyproject.toml
         run: |
           echo "VERSION=$(grep '^\[tool.poetry\]' -A 5 pyproject.toml | grep '^version =' | awk -F\" '{print $2}')" >> $GITHUB_ENV
-          echo "current version is ${{VERSION}}"
+          echo "current version is $VERSION"
 
 
       - name: Check if release exists
